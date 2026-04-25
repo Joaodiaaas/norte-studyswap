@@ -31,16 +31,14 @@ const DIAG = [
   { id: "nome", pergunta: "Primeiro, como posso te chamar?", tipo: "texto" },
   { id: "serie", pergunta: null, opcoes: ["1º ano", "2º ano", "3º ano", "Cursinho"], tipo: "opcoes" },
   { id: "foco", pergunta: "Seu foco é escola ou vestibular?", opcoes: ["Escola", "UFMG Seriado", "ENEM", "Fuvest", "Unicamp", "ITA/IME"], tipo: "opcoes" },
-  { id: "dificuldade", pergunta: "Quais matérias você sente mais dificuldade? Pode escolher várias ou digitar.", opcoes: ["Matemática", "Física", "Química", "Biologia", "Português", "História", "Geografia", "Inglês"], tipo: "multi" },
+  { id: "dificuldade", pergunta: "Quais matérias você sente mais dificuldade? Pode escolher várias ou digitar.", opcoes: ["Matemática", "Física", "Química", "Biologia", "Português", "História", "Geografia", "Filosofia", "Sociologia", "Inglês"], tipo: "multi" },
   { id: "rotina", pergunta: "Como tá sua rotina de estudos hoje?", opcoes: ["Estudo todo dia", "Só antes de prova", "Tô perdido", "Quase não estudo"], tipo: "opcoes" },
   { id: "horas", pergunta: "Quantas horas por dia você consegue estudar (fora da escola)?", opcoes: ["1 hora", "2 horas", "3 horas", "4+ horas"], tipo: "opcoes" },
   { id: "sentimento", pergunta: "E como você se sente em relação aos estudos?", opcoes: ["Tranquilo", "Um pouco perdido", "Atrasado", "Muito ansioso"], tipo: "opcoes" }
 ];
 
 const PAYWALL_PLANS = [
-  { nome: "Mensal", preco: "R$ 19,90/mês", destaque: false, desc: "Cancele quando quiser", key: "mensal" },
-  { nome: "Trimestral", preco: "R$ 14,90/mês", destaque: true, desc: "Economize 25% — mais popular", key: "trimestral" },
-  { nome: "Anual", preco: "R$ 9,90/mês", destaque: false, desc: "Melhor custo-benefício", key: "anual" }
+  { nome: "NORTE Beta", preco: "Grátis", destaque: true, desc: "Acesso completo durante o beta", key: "mensal" }
 ];
 
 const CK2R = {
@@ -316,7 +314,18 @@ function handleSend() {
   if (!currentQ || state.chatStep >= DIAG.length) {
     state.messages.push({ from: 'aluno', text });
     const nome = state.respostas.nome || 'Ei';
-    addNorteMsgs([`${nome}, usa o botão de check-in pra atualizar seu progresso!`]);
+    const l = text.toLowerCase();
+    if (l.includes("obrigad") || l.includes("valeu") || l.includes("top") || l.includes("bom") || l.includes("legal")) {
+      addNorteMsgs([`Por nada, ${nome}! Quando quiser atualizar como foi sua semana, clica no check-in 👇`]);
+    } else if (l.includes("mudar") || l.includes("trocar") || l.includes("alterar") || l.includes("ajust")) {
+      addNorteMsgs([`${nome}, pra ajustar seu plano, faz um check-in e me conta o que precisa mudar!`]);
+    } else if (l.includes("plano") || l.includes("ver") || l.includes("cade") || l.includes("onde") || l.includes("sumiu")) {
+      addNorteMsgs([`${nome}, rola pra cima que seu plano tá lá! Ou clica no botão "📋 Ver meu plano" ali embaixo.`]);
+    } else if (l.includes("oi") || l.includes("ola") || l.includes("eai") || l.includes("fala")) {
+      addNorteMsgs([`Fala, ${nome}! Tudo certo? Quando quiser atualizar seu progresso, é só fazer o check-in 👇`]);
+    } else {
+      addNorteMsgs([`${nome}, agora é hora de executar o plano! Quando quiser atualizar seu progresso, clica no check-in ali embaixo 👇`]);
+    }
     state.inputText = '';
     render();
     return;
